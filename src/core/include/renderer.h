@@ -1,27 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "data.h"
+
+#include <string>
+#include <array>
 #include <vector>
-
-#define COLOR_BLACK "\033[40m"
-#define COLOR_RED "\033[41m"
-#define COLOR_GREEN "\033[42m"
-#define COLOR_YELLOW "\033[43m"
-#define COLOR_BLUE "\033[44m"
-#define COLOR_MAGENTA "\033[45m"
-#define COLOR_CYAN "\033[46m"
-#define COLOR_WHITE "\033[47m"
-#define COLOR_DEFAULT "\033[49m"
-
-#define TEXT_COL_BLACK "\033[30m"
-#define TEXT_COL_RED "\033[31m"
-#define TEXT_COL_GREEN "\033[32m"
-#define TEXT_COL_YELLOW "\033[33m"
-#define TEXT_COL_BLUE "\033[34m"
-#define TEXT_COL_MAGENTA "\033[35m"
-#define TEXT_COL_CYAN "\033[36m"
-#define TEXT_COL_WHITE "\033[37m"
-#define TEXT_COL_DEFAULT "\033[39m"
 
 class Renderer {
 public:
@@ -34,30 +17,34 @@ public:
 		MAGENTA,
 		CYAN,
 		WHITE,
-		DEFAULT,
+		DEFAULT // Default terminal color (Transparent)
 	};
 
 	Renderer() = delete;
-	explicit Renderer(const Vector2& p_display_size);
+	explicit Renderer(const Vector2I& p_resolution);
 	~Renderer();
 
-	static constexpr Color EMPTY_COLOR = WHITE;
+	void set_resolution(const Vector2I& p_resolution);
+	const Vector2I& get_resolution() const;
 
-	void clear_screen();
-	void draw_pixel(const Vector2& p_coord, const Color p_fg_color, const Color p_bg_color, const char* p_tex = "  ");
-	void draw_chixel(const Vector2& p_coord, const Color p_fg_color, const Color p_bg_color, const char* p_tex = " ");
+	void draw_pixel(const Vector2I& p_coord, const Color p_color);
+	void draw_rect(const Vector2I& p_position, const Vector2I& p_size, Renderer::Color p_color = Renderer::WHITE);
+	void draw_sprite(const char* p_sprite, const Vector2I& p_position, bool flip_h = false, bool flip_v = false, const Vector2I& p_size = { 16, 16 });
+
+	void print_term(const std::string p_str, const Vector2I& p_coord = Vector2I(), const Color p_fg_color = WHITE, const Color p_bg_color = DEFAULT);
+	void print(const std::string p_str, const Vector2I& p_coord = Vector2I(), const Color p_fg_color = WHITE, const Color p_bg_color = DEFAULT);
+
 	void render_screen();
 
-	void print(const char* p_str, const Vector2& p_coord = Vector2(), const Color p_fg_color = DEFAULT, const Color p_bg_color = DEFAULT);
-
-	const Vector2 buf_size;
 private:
-
-	struct Chixel {
-		Color fg = DEFAULT;
-		Color bg = DEFAULT;
-		char c = 0;
+	struct Cell {
+		Color top = DEFAULT;
+		Color bottom = DEFAULT;
+		std::string c = "▀";
 	};
-	friend std::ostream& operator<<(std::ostream&, const Renderer::Chixel&);
-	std::vector<Chixel> m_display_buf;
+
+	Vector2I resolution;
+	// Double buffering
+	char m_current_buf = 0;
+	std::array<std::vector<Cell>, 2> m_display_buffers;
 };

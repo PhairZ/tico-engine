@@ -1,4 +1,5 @@
 #include "objects.h"
+
 #include <typeinfo>
 
 std::ostream& operator<<(std::ostream& p_os, const Object& p_obj) {

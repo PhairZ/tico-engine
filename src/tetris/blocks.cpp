@@ -1,37 +1,41 @@
 #include "blocks.h"
 #include "level.h"
+
 #include <algorithm>
 
 void Block::draw() {
     Level& lvl = Level::get_singleton();
     auto shape = get_shape();
+
     for (size_t i = 0; i < 4; i++) {
         auto& tile =  shape[i + m_rot_offset];
-        lvl.set_cell(m_position + tile, { color, texture });
+        lvl.set_cell(m_position + tile, { color });
     }
 }
 
 void Block::clear() {
     Level& lvl = Level::get_singleton();
     auto shape = get_shape();
+
     for (size_t i = 0; i < 4; i++) {
         auto& tile =  shape[i + m_rot_offset];
-        lvl.set_cell(m_position + tile, Renderer::EMPTY_COLOR);
+        lvl.set_cell(m_position + tile, Renderer::DEFAULT);
     }
 }
 
-int Block::move(const Vector2& p_offset) {
+int Block::move(const Vector2I& p_offset) {
     Level& lvl = Level::get_singleton();
     auto shape = get_shape();
+
     for (size_t i = 0; i < 4; i++) {
         auto& tile = shape[i + m_rot_offset];
         bool is_self = std::any_of(
-            shape.begin() + m_rot_offset, shape.begin() + 4 + m_rot_offset,
-            [p_offset, tile](const Vector2& vec) { return vec == (tile + p_offset); }
+            shape.begin() + m_rot_offset, shape.begin() + m_rot_offset + 4,
+            [p_offset, tile](const Vector2I& vec) { return vec == (tile + p_offset); }
         );
 
         if (!is_self) {
-            bool collided = lvl.get_cell(m_position + p_offset + tile).color != Renderer::EMPTY_COLOR;
+            bool collided = lvl.get_cell(m_position + p_offset + tile).color != Renderer::DEFAULT;
             if (collided)
                 return -1;
         }
@@ -50,12 +54,12 @@ int Block::rotate(bool p_ccw) {
     for (size_t i = 0; i < 4; i++) {
         auto& new_shape = shape[i + new_rot];
         bool is_self = std::any_of(
-            shape.begin() + m_rot_offset, shape.begin() + 4 + m_rot_offset,
-            [new_shape](const Vector2& vec) { return vec == new_shape; }
+            shape.begin() + m_rot_offset, shape.begin() + m_rot_offset + 4,
+            [new_shape](const Vector2I& vec) { return vec == new_shape; }
         );
 
         if (!is_self) {
-            bool collided = lvl.get_cell(m_position + new_shape).color != Renderer::EMPTY_COLOR;
+            bool collided = lvl.get_cell(m_position + new_shape).color != Renderer::DEFAULT;
             if (collided)
                 return -1;;
         }

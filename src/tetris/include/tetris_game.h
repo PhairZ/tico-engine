@@ -3,6 +3,7 @@
 #include "game.h"
 #include "data.h"
 #include "blocks.h"
+
 #include <vector>
 #include <memory>
 
@@ -12,9 +13,9 @@ class Tetris : public Game {
 	void _update(double p_delta) override;
 	void _draw() override;
 
-	void spawn_block(const Vector2& p_pos = C_SPAWN_POS);
+	void spawn_block(const Vector2I& p_pos = C_SPAWN_POS);
 
-	static constexpr Vector2 C_SPAWN_POS{ 6, 2 };
+	static constexpr Vector2I C_SPAWN_POS{ 6, 2 };
 
 	int m_singles = 0;
 	int m_doubles = 0;

@@ -2,8 +2,6 @@
 
 #include "input.h"
 #include "renderer.h"
-#include "audio.h"
-#include <chrono>
 
 class Game : public InputEventListener {
 public:
@@ -11,13 +9,13 @@ public:
 
     void run();
 protected:
-    virtual void _init() {}
-	virtual void _input_event(InputEvent* const p_event) override {}
-    virtual void _update(double p_delta) {}
-    virtual void _draw() {}
+    virtual void _init() = 0;
+    virtual void _input_event(InputEvent* const p_event) override = 0;
+    virtual void _update(double p_delta) = 0;
+    virtual void _draw() = 0;
 
     bool m_running = true;
-    Renderer m_renderer = Renderer({ 40, 20 });
-    Audio m_audio;
-    std::chrono::milliseconds m_delta_time{0};
+
+    Renderer m_renderer = Renderer({ 20, 20 });
+    double m_delta_time = 1.0 / 30.0; // Expect 30 fps on first frame.
 };

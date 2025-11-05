@@ -8,8 +8,10 @@ public:
 	virtual ~Object() = default;
 
 	bool is_valid() { return m_valid; }
+
 protected:
 	void invalidate() { m_valid = false; }
+
 private:
 	bool m_valid = true;
 	Object* m_instance_id = this;
