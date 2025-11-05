@@ -84,6 +84,14 @@ void Renderer::draw_sprite(const char* p_sprite, const Vector2I& p_position, boo
 	}
 }
 
+void Renderer::clear(Color p_color) {
+	for (int y = 0; y < resolution.y; y++) {
+		for (int x = 0; x < resolution.x; x++) {
+			draw_pixel({x, y}, p_color);
+		}
+	}
+}
+
 void Renderer::print_term(std::string p_str, const Vector2I& p_pos, const Color p_fg_color, const Color p_bg_color) {
 	Vector2I pos = { p_pos.x, p_pos.y / 2 };
 

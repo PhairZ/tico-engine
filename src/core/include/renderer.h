@@ -30,7 +30,8 @@ public:
 	void draw_pixel(const Vector2I& p_coord, const Color p_color);
 	void draw_rect(const Vector2I& p_position, const Vector2I& p_size, Renderer::Color p_color = Renderer::WHITE);
 	void draw_sprite(const char* p_sprite, const Vector2I& p_position, bool flip_h = false, bool flip_v = false, const Vector2I& p_size = { 16, 16 });
-
+	void clear(Color p_color = Color::BLACK);
+	
 	void print_term(const std::string p_str, const Vector2I& p_coord = Vector2I(), const Color p_fg_color = WHITE, const Color p_bg_color = DEFAULT);
 	void print(const std::string p_str, const Vector2I& p_coord = Vector2I(), const Color p_fg_color = WHITE, const Color p_bg_color = DEFAULT);
 
