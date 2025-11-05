@@ -24,7 +24,7 @@ struct Vector2I {
 
 	double length() const;
 	Vector2I normalized() const;
-	std::string to_string() const;
+	std::string to_str() const;
 
 	bool operator==(const Vector2I& other) const;
 
@@ -58,7 +58,7 @@ struct Vector2 {
 
 	double length() const;
 	Vector2 normalized() const;
-	std::string to_string() const;
+	std::string to_str() const;
 
 	bool operator==(const Vector2& p_other) const;
 

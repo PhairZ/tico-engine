@@ -2,7 +2,7 @@
 
 #include <typeinfo>
 
-std::ostream& operator<<(std::ostream& p_os, const Object& p_obj) {
-    return p_os << '<' << typeid(p_obj.m_instance_id).name() << ':' << p_obj.m_instance_id << '>';
+std::string Object::to_str() const {
+    return "<" + std::string(typeid(m_instance_id).name()) + ":" + std::to_string((size_t)m_instance_id) + ">";
 }
 

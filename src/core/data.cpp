@@ -50,10 +50,6 @@ bool Vector2::operator==(const Vector2& p_other) const {
 	return (x == p_other.x && y == p_other.y);
 }
 
-static std::ostream& operator<<(std::ostream& p_os, const Vector2I& p_vec2) {
-   return p_os << '(' << p_vec2.x << ", " << p_vec2.y << ')';  
-}  
-
 double Vector2I::length() const {
 	return std::hypot(x, y);
 }
@@ -63,7 +59,7 @@ Vector2I Vector2I::normalized() const {
 	return (len > 0) ? Vector2I(x / len, y / len) : Vector2I(0);
 }
 
-std::string Vector2I::to_string() const {
+std::string Vector2I::to_str() const {
 	return '(' + std::to_string(x) + ", " + std::to_string(y) + ')';
 }
 
@@ -106,10 +102,6 @@ Vector2& Vector2::operator/=(const Vector2& p_other) {
 	return *this = *this / p_other;
 }
 
-static std::ostream& operator<<(std::ostream& p_os, const Vector2& p_vec2) {
-   return p_os << '(' << p_vec2.x << ", " << p_vec2.y << ')';  
-}
-
 double Vector2::length() const {
 	return std::hypot(x, y);
 }
@@ -119,6 +111,6 @@ Vector2 Vector2::normalized() const {
 	return (len > 0) ? Vector2(x / len, y / len) : Vector2(0.0);
 }
 
-std::string Vector2::to_string() const {
+std::string Vector2::to_str() const {
 	return '(' + std::to_string(x) + ", " + std::to_string(y) + ')';
 }

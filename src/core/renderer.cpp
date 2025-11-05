@@ -16,10 +16,7 @@
 
 Renderer::Renderer(const Vector2I& p_resolution) :
 	resolution(p_resolution),
-	m_display_buffers{
-		std::vector<Cell>(p_resolution.x * (p_resolution.y / 2)),
-		std::vector<Cell>(p_resolution.x * (p_resolution.y / 2))
-	} {
+	m_display_buffer(std::vector<Cell>(p_resolution.x * (p_resolution.y / 2))) {
 
 	FILE* nullFile = fopen(null_device, "w");
 	if (nullFile) {
@@ -40,9 +37,7 @@ Renderer::~Renderer(){
 
 void Renderer::set_resolution(const Vector2I& p_resolution) {
 	resolution = p_resolution;
-	m_display_buffers[0].resize(p_resolution.x * (p_resolution.y / 2));
-	m_display_buffers[1].resize(p_resolution.x * (p_resolution.y / 2));
-	m_current_buf = 0;
+	m_display_buffer.reserve(p_resolution.x * (p_resolution.y / 2));
 }
 
 const Vector2I& Renderer::get_resolution() const {
@@ -54,7 +49,7 @@ void Renderer::draw_pixel(const Vector2I& p_pos, const Color p_color) {
 		return;
 	}
 
-	auto& current_buf = m_display_buffers[m_current_buf];
+	auto& current_buf = m_display_buffer;
 	current_buf[p_pos.x + resolution.x * (p_pos.y / 2)].c = "▀";
 	if (p_pos.y & 1) {
 		current_buf[p_pos.x + resolution.x * (p_pos.y / 2)].bottom = p_color;
@@ -92,11 +87,11 @@ void Renderer::clear(Color p_color) {
 	}
 }
 
-void Renderer::print_term(std::string p_str, const Vector2I& p_pos, const Color p_fg_color, const Color p_bg_color) {
+void Renderer::print_term(const Printable& p_text, const Vector2I& p_pos, const Color p_fg_color, const Color p_bg_color) {
 	Vector2I pos = { p_pos.x, p_pos.y / 2 };
 
-	for (int i = 0; p_str[i]; i++) {
-		if (p_str[i] == '\n') {
+	for (int i = 0; p_text[i]; i++) {
+		if (p_text[i] == '\n') {
 			pos.y++;
 			pos.x = p_pos.x;
 			continue;
@@ -108,7 +103,7 @@ void Renderer::print_term(std::string p_str, const Vector2I& p_pos, const Color 
 			continue;
 		}
 
-		Cell& cell = m_display_buffers[m_current_buf][pos.x + resolution.x * pos.y];
+		Cell& cell = m_display_buffer[pos.x + resolution.x * pos.y];
 		pos.x++;
 
 		if (p_fg_color != DEFAULT) {
@@ -117,23 +112,23 @@ void Renderer::print_term(std::string p_str, const Vector2I& p_pos, const Color 
 		if (p_bg_color != DEFAULT) {
 			cell.bottom = p_bg_color;
 		}
-		cell.c = p_str[i];
+		cell.c = p_text[i];
 	}
 }
 
-void Renderer::print(std::string p_str, const Vector2I& p_pos, const Color p_fg_color, const Color p_bg_color) {
+void Renderer::print(const Printable& p_text, const Vector2I& p_pos, const Color p_fg_color, const Color p_bg_color) {
 	Vector2I pos = { p_pos.x, p_pos.y};
 
-	for (int i = 0; p_str[i]; i++) {
+	for (int i = 0; p_text[i]; i++) {
 		short glyph = '\0';
-		if (p_str[i] == '\n') {
+		if (p_text[i] == '\n') {
 			pos.y += m_glyph_sz.y + 2;
 			pos.x = p_pos.x;
 			continue;
 		}
 
 
-		char c = std::toupper(p_str[i]);
+		char c = std::toupper(p_text[i]);
 		if (c >= 32 && c <= 96) {
 			glyph = C_GLYPHS[c - 32];
 		}
@@ -166,15 +161,13 @@ void Renderer::print(std::string p_str, const Vector2I& p_pos, const Color p_fg_
 
 void Renderer::render_screen() {
 	std::string render;
-	auto& buffer = m_display_buffers[m_current_buf];
-	m_current_buf ^= 1; // Swap buffers.
 
 	render += "\033[H"; // Move cursor to home position.
 	for (int y = 0; y < resolution.y/2; y++) {
 		for (int x = 0; x < resolution.x; x++) {
-			render += fg_col_table[buffer[x + resolution.x * y].top];
-			render += bg_col_table[buffer[x + resolution.x * y].bottom];
-			render += buffer[x + resolution.x * y].c;
+			render += fg_col_table[m_display_buffer[x + resolution.x * y].top];
+			render += bg_col_table[m_display_buffer[x + resolution.x * y].bottom];
+			render += m_display_buffer[x + resolution.x * y].c;
 		}
 		render += '\n';
 	}
