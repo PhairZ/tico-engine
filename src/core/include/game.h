@@ -16,6 +16,6 @@ protected:
 
     bool m_running = true;
 
-    Renderer m_renderer = Renderer({ 20, 20 });
+    Renderer m_renderer = Renderer({ 128, 128 });
     double m_delta_time = 1.0 / 30.0; // Expect 30 fps on first frame.
 };
