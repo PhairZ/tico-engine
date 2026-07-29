@@ -5,17 +5,18 @@
 
 class Game : public InputEventListener {
 public:
-    virtual ~Game() = default;
+  virtual ~Game() = default;
 
-    void run();
+  void run();
+
 protected:
-    virtual void _init() = 0;
-    virtual void _input_event(InputEvent* const p_event) override = 0;
-    virtual void _update(double p_delta) = 0;
-    virtual void _draw() = 0;
+  virtual void _init() = 0;
+  virtual void _input_event(InputEvent *const p_event) override = 0;
+  virtual void _update(double p_delta) = 0;
+  virtual void _draw() = 0;
 
-    bool m_running = true;
+  bool m_running = true;
 
-    Renderer m_renderer = Renderer({ 128, 128 });
-    double m_delta_time = 1.0 / 30.0; // Expect 30 fps on first frame.
+  Renderer m_renderer;
+  double m_delta_time = 1.0 / 30.0; // Expect 30 fps on first frame.
 };
