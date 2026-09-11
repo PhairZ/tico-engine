@@ -31,7 +31,19 @@ private:
 		Printable(const Vector2 &p_vec) : text(p_vec.to_str()) {}
 		Printable(const Vector2I &p_vec) : text(p_vec.to_str()) {}
 
+		Printable(const int p_arr_int[], const size_t size) : text(to_text(p_arr_int, size)) {}
+
 		char operator[](int p_idx) const { return text[p_idx]; }
+
+		static std::string to_text(const int p_arr_8int[], const size_t size) {
+			std::string output = "[";
+			for (int i = 0; i < size - 1; i++) {
+				output += std::to_string(p_arr_8int[i]) + ", ";
+			}
+			output += std::to_string(p_arr_8int[size - 1]) + "]";
+
+			return output;
+		}
 
 		const std::string text;
 	};
