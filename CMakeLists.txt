@@ -9,4 +9,5 @@ link_libraries(runtime)
 
 add_subdirectory(src/tetris)
 add_subdirectory(src/smb)
+add_subdirectory(src/chip8)
 add_subdirectory(src/snake)

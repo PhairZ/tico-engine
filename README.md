@@ -3,3 +3,5 @@ A Terminal powered Game Engine made in C++ with some Game Demos.
 
 List of currently available games:
 - Tetris
+- Super Mario Bros 2 (Crude).
+- A Chip80 Interpreter.
